@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+html {
+  /* Esto hace que todos los saltos de ancla sean suaves */
+  scroll-behavior: smooth;
+  /* Ajuste para que el scroll no sea instantáneo (soporte navegadores modernos) */
+  scroll-padding-top: 5rem; /* Evita que el Navbar tape el título al bajar */
+}
+
+@theme {
+  /* Al usar --color-*, Tailwind v4 genera automáticamente las clases text-*, bg-*, etc. */
+  --color-urban-green: #a3e635;
+  --color-urban-yellow: #fbbf24;
+  --color-urban-dark: #0a0a0a;
+  --color-urban-gray: #111111;
+
+  /* Mapeo de fuentes para que font-heading y font-sans funcionen */
+  --font-heading: var(--font-oswald);
+  --font-sans: var(--font-roboto);
+  --font-bebas: var(--font-bebas);
+}
+
+@layer base {
+  body {
+    background-color: #0a0a0a; /* Forzamos el negro de tu diseño */
+    color: white;
+    @apply antialiased;
+  }
+}
+
+@layer components {
+  .btn-urban {
+    /* Aquí usamos var(--font-heading) para que respete la Oswald del layout */
+    @apply px-8 py-3 uppercase tracking-widest transition-all duration-300 active:scale-95 font-heading;
+  }
+}
+
+
+.text-shadow-graffiti {
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8), 1px 1px 2px rgba(255, 255, 255, 0.1);
+}
