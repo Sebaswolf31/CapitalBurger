@@ -49,7 +49,7 @@ export const menu: Product[] = [
     id: '5',
     name: 'Extasis',
     description:
-      'Carne de res chorizo y jalapeño, guacamole, lechuga, pico de gallo, pan brioche, nachos, mozarella, cremosa de papa, mayonesa de chimichurri',
+      'Mayo de la casa, lechuga, pulled pork en salsa de jaggermatter, queso philadelphia, mermelada de frutos rojos ( mora, flor de jamaica, arandanos) ',
     price: 18000,
     image: '/burgers/extasis.jpeg',
     tag: 'PRODUCTO MES',
@@ -106,7 +106,7 @@ export const menu: Product[] = [
     id: '21',
     name: ' Criminal',
     description:
-      'Papas a la frnacesa, salchicha long, tocineta, queso mozarella, huevos de codorniz ',
+      'Papas a la francesa, salchicha long, tocineta, queso mozarella, huevos de codorniz ',
     price: 12000,
     image: '/fries/criminal.jpeg',
     tag: 'EL VISAGE',
