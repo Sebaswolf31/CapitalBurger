@@ -1,11 +1,11 @@
 import Image from 'next/image';
-import { Instagram, Facebook } from 'lucide-react'; 
+import { Instagram, Facebook } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 
 export const Footer = () => {
   return (
     <footer
-      className='bg-[#050505] border-t border-white/5 pt-12 pb-6'
+      className='bg-[#050505] border-t border-white/5 pt-19 pb-6'
       id='contacto'
     >
       <div className='max-w-6xl mx-auto px-5'>

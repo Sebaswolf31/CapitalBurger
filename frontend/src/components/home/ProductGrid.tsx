@@ -39,6 +39,24 @@ export const ProductGrid = () => {
     setAvailableCategories(cats);
   }, []);
 
+  useEffect(() => {
+    const handleExternalCategoryChange = (event: any) => {
+      const newCategory = event.detail; // Aquí llega 'promociones' o 'picadas'
+      setActiveCategory(newCategory);
+    };
+
+    // Nos ponemos en modo "escucha"
+    window.addEventListener('setMenuCategory', handleExternalCategoryChange);
+
+    // Limpiamos al salir
+    return () => {
+      window.removeEventListener(
+        'setMenuCategory',
+        handleExternalCategoryChange,
+      );
+    };
+  }, []);
+
   // --- TU LÓGICA DE FILTRADO Y ORDEN (SE MANTIENE IGUAL) ---
   const filteredProducts = menu
     .filter((item) => item.category === activeCategory)

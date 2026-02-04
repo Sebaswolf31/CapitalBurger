@@ -9,7 +9,7 @@ import { Toaster } from 'sonner';
 import { PageLoader } from '@/components/ui/PageLoader';
 import { PromoModal } from '@/components/ui/PromoModal';
 import { CravingPrompt } from '@/components/ui/CravingPrompt';
-
+import { DailyPromoPopup } from '@/components/ui/DailyPromoPopup';
 // Fuente para Títulos (Estilo Urbano)
 const oswald = Oswald({
   subsets: ['latin'],
@@ -52,6 +52,7 @@ export default function RootLayout({
           <PromoModal />
           <CravingPrompt />
           <Navbar />
+          <DailyPromoPopup />
           <Toaster position='top-center' richColors expand={false} />
           <main>{children}</main>
           <Footer />

@@ -21,12 +21,12 @@ export const CravingPrompt = () => {
     // Si no hay promo, o ya compraron algo, no molestamos
     if (!promoProduct || cart.length > 0) return;
 
-    // Primer intento: aparece a los 20 segundos
+    // Primer intento: aparece a los 38 segundos
     if (attempts === 0) {
       timerRef.current = setTimeout(() => {
         setIsVisible(true);
         setAttempts((prev) => prev + 1);
-      }, 30000);
+      }, 38000);
     }
 
     return () => {
@@ -96,7 +96,7 @@ export const CravingPrompt = () => {
         <div className='flex flex-col max-w-[140px]'>
           <span className='text-white font-urban text-[10px] uppercase italic tracking-wider leading-none flex items-center gap-1'>
             <Flame size={10} className='text-urban-green' fill='currentColor' />
-            {attempts > 1 ? '¿Sigues ahí?' : 'Recomendada'}{' '}
+            {attempts > 1 ? '¿No te has decidido?' : 'Recomendada'}{' '}
             {/* Cambiamos el texto si vuelve a salir */}
           </span>
           <span className='text-white font-heading text-xs uppercase mt-1 truncate'>
