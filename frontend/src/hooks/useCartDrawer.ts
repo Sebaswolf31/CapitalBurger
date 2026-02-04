@@ -42,32 +42,59 @@ export const useCartDrawer = () => {
     });
 
     setTimeout(() => {
+      // 1. DECLARAMOS LA VARIABLE MESSAGE AQUÍ
       let message = `*🔥 NUEVO PEDIDO - CAPITAL BURGER 🔥*\n\n`;
       message += `*Cliente:* Web\n`;
       message += `-----------------------------------\n`;
 
+      // 2. RECORREMOS EL CARRITO INCLUYENDO EXTRAS
       cart.forEach((item) => {
-        message += `▪️ ${item.quantity}x ${item.name} - $${(
-          item.price * item.quantity
-        ).toLocaleString('es-CO')}\n`;
+        const extrasCost =
+          item.selectedExtras?.reduce(
+            (acc: number, e: any) => acc + e.price,
+            0,
+          ) || 0;
+        const totalUnitario = item.price + extrasCost;
+
+        message += `▪️ ${item.quantity}x ${item.name}\n`;
+
+        // Si tiene adicionales, los listamos debajo del nombre
+        if (item.selectedExtras && item.selectedExtras.length > 0) {
+          const extrasList = item.selectedExtras
+            .map((e: any) => e.name)
+            .join(', ');
+          message += `   _Adicionales: ${extrasList}_\n`;
+        }
+
+        message += `   Subtotal: $${(
+          totalUnitario * item.quantity
+        ).toLocaleString('es-CO')}\n\n`;
       });
 
       message += `-----------------------------------\n`;
-      message += `*💰 TOTAL: $${totalPrice.toLocaleString('es-CO')}*\n\n`;
+      message += `*💰 TOTAL A PAGAR: $${totalPrice.toLocaleString(
+        'es-CO',
+      )}*\n\n`;
       message += `*📍 DIRECCIÓN:* ${formData.address}\n`;
       message += `*💵 MÉTODO DE PAGO:* ${formData.paymentMethod}\n`;
-      if (formData.notes) message += `*📝 NOTAS:* ${formData.notes}\n`;
+
+      if (formData.notes) {
+        message += `*📝 NOTAS:* ${formData.notes}\n`;
+      }
 
       const url = `https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(
         message,
       )}`;
 
       window.open(url, '_blank');
-      clearCart();
-      setIsCartOpen(false);
-      setStep('cart');
-      setFormData({ address: '', paymentMethod: 'Efectivo', notes: '' });
-    }, 3000);
+
+      // Limpiar y cerrar después de enviar
+      setTimeout(() => {
+        clearCart();
+        setIsCartOpen(false);
+        setStep('cart');
+      }, 1600);
+    }, 2000);
   };
 
   return {

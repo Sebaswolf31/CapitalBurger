@@ -33,7 +33,7 @@ export const FlyingImage = ({
             opacity: 0,
             rotate: 360,
           }}
-          transition={{ duration: 0.8, ease: 'easeInOut' }}
+          transition={{ duration: 1.1, ease: 'easeInOut' }}
           className='object-cover border-2 border-urban-green'
         />
       )}

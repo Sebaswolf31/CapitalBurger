@@ -29,7 +29,7 @@ export const Hero = () => {
       <div className='relative z-10 text-center px-4'>
         <h1 className='font-bebas text-3xl md:text-8xl lg:text-6xl font-black leading-none tracking-wider text-white uppercase italic text-shadow-graffiti'>
           Capital Burger <br />
-          <span className=' text-urban-green'>Sabor real</span>
+          <span className=' text-urban-green'>Alta Gama Puro Barrio</span>
         </h1>
 
         <p className='font-bebas mt-6 text-gray-300 text-lg md:text-xl font-sans max-w-lg mx-auto'>
