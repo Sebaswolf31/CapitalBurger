@@ -8,31 +8,63 @@ import { useCart } from '@/context/CartContext';
 export const CravingPrompt = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [added, setAdded] = useState(false);
-  const [attempts, setAttempts] = useState(0); // Contador de veces mostrado
+  const [attempts, setAttempts] = useState(0);
 
-  const { addToCart, setIsCartOpen, cart } = useCart(); // Traemos 'cart' para verificar si está vacío
+  const { addToCart, setIsCartOpen, cart } = useCart();
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // REFERENCIA PARA EL AUDIO
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const promoProduct = menu.find((item) => item.isPromo);
-  const MAX_ATTEMPTS = 3; // Solo insistiremos 3 veces
-  const SNOOZE_TIME = 120000; // 2 minutos (120,000 ms) antes de volver a salir
+  const MAX_ATTEMPTS = 3;
+  const SNOOZE_TIME = 120000; // 2 minutos
 
+  // 1. Inicialización del audio
   useEffect(() => {
-    // Si no hay promo, o ya compraron algo, no molestamos
-    if (!promoProduct || cart.length > 0) return;
+    audioRef.current = new Audio('/sounds/notification.mp3');
+    audioRef.current.volume = 0.3; // Volumen sugerido (30%)
+    
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
 
-    // Primer intento: aparece a los 38 segundos
+  // 2. Función centralizada para mostrar y sonar
+  const triggerShow = () => {
+    // Si el usuario ya agregó algo mientras el timer corría, no mostramos nada
+    if (cart.length > 0) return;
+
+    setIsVisible(true);
+    setAttempts((prev) => prev + 1);
+    
+    // Reproducir sonido al aparecer
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0; // Reinicia el audio por si acaso
+      audioRef.current.play().catch((e) => {
+        console.log("El navegador bloqueó el audio automático hasta que el usuario interactúe.");
+      });
+    }
+  };
+
+  // 3. Control de los tiempos de aparición
+  useEffect(() => {
+    if (!promoProduct || cart.length > 0) {
+      setIsVisible(false);
+      return;
+    }
+
+    // Primer intento: a los 38 segundos
     if (attempts === 0) {
       timerRef.current = setTimeout(() => {
-        setIsVisible(true);
-        setAttempts((prev) => prev + 1);
-      }, 38000);
+        triggerShow();
+      }, 35000);
     }
 
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [promoProduct, cart.length, attempts]); // Se reinicia si cambia el carrito o los intentos
+  }, [promoProduct, cart.length, attempts]);
 
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -41,7 +73,7 @@ export const CravingPrompt = () => {
     addToCart(promoProduct);
     setAdded(true);
 
-    // Al comprar, cerramos y ya NO vuelve a salir (porque cart.length > 0)
+    // Pequeño delay para que el usuario vea el check antes de abrir el carrito
     setTimeout(() => {
       setIsCartOpen(true);
       setIsVisible(false);
@@ -52,26 +84,13 @@ export const CravingPrompt = () => {
     e.stopPropagation();
     setIsVisible(false);
 
-    // Lógica de "Snooze" (Posponer)
-    // Si aún no hemos superado el límite de intentos y el carrito sigue vacío...
+    // Si aún quedan intentos, programar la reaparición
     if (attempts < MAX_ATTEMPTS && cart.length === 0) {
-      console.log(`Prompt cerrado. Volverá en ${SNOOZE_TIME / 60000} minutos.`);
-
-      // Programamos la reaparición
       timerRef.current = setTimeout(() => {
-        // Doble verificación: ¿Sigue vacío el carrito?
-        if (cart.length === 0) {
-          setIsVisible(true);
-          setAttempts((prev) => prev + 1);
-        }
+        triggerShow();
       }, SNOOZE_TIME);
     }
   };
-
-  // Si ya compraron algo, forzamos que se oculte si estaba abierto
-  useEffect(() => {
-    if (cart.length > 0) setIsVisible(false);
-  }, [cart]);
 
   if (!promoProduct || !isVisible) return null;
 
@@ -81,6 +100,7 @@ export const CravingPrompt = () => {
         initial={{ x: 100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: 100, opacity: 0 }}
+        transition={{ type: 'spring', stiffness: 100, damping: 15 }}
         className='fixed bottom-24 right-0 z-[100] pl-4 pr-4 py-3 bg-[#0a0a0a] border-l-4 border-urban-green shadow-[0_0_30px_rgba(0,0,0,0.5)] flex items-center gap-4 rounded-l-2xl border-y border-white/5'
       >
         {/* IMAGEN */}
@@ -96,8 +116,7 @@ export const CravingPrompt = () => {
         <div className='flex flex-col max-w-[140px]'>
           <span className='text-white font-urban text-[10px] uppercase italic tracking-wider leading-none flex items-center gap-1'>
             <Flame size={10} className='text-urban-green' fill='currentColor' />
-            {attempts > 1 ? '¿No te has decidido?' : 'Recomendada'}{' '}
-            {/* Cambiamos el texto si vuelve a salir */}
+            {attempts > 1 ? '¿Aún con antojo?' : 'Recomendada'}
           </span>
           <span className='text-white font-heading text-xs uppercase mt-1 truncate'>
             {promoProduct.name}
@@ -124,7 +143,7 @@ export const CravingPrompt = () => {
           )}
         </button>
 
-        {/* CERRAR (Activa el Snooze) */}
+        {/* CERRAR */}
         <button
           onClick={handleClose}
           className='absolute -top-2 left-2 bg-gray-900 text-gray-500 w-5 h-5 rounded-full text-[10px] flex items-center justify-center border border-white/10 hover:text-white hover:bg-red-900 transition-colors'
