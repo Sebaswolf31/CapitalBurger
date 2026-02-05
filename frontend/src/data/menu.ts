@@ -6,9 +6,9 @@ const commonExtras: ExtraOption[] = [
   { id: 'ext-papas-full', name: 'Porción de Papa', price: 5000 },
   { id: 'ext-huevos', name: 'Huevo Codorniz (10und)', price: 5000 },
   { id: 'ext-tocineta', name: 'Tocineta', price: 3000 },
-  { id: 'ext-carne', name: 'Carne', price: 5000 },
-  { id: 'ext-pollo', name: 'Pollo', price: 5000 },
-  { id: 'ext-salchicha', name: 'Salchicha', price: 3000 },
+  { id: 'ext-carne', name: 'Carne (und)', price: 5000 },
+  { id: 'ext-pollo', name: 'Pollo (und)', price: 5000 },
+  { id: 'ext-salchicha', name: 'Salchicha (und)', price: 3000 },
   { id: 'ext-queso', name: 'Queso', price: 5000 },
 ];
 
@@ -171,7 +171,7 @@ export const menu: Product[] = [
     description: '2 Hamburguesas Callejeras +  2 Porción de Papas + 2 gaseosas',
     price: 26000,
     image: '/promos/combiCompleta.jpeg', // Asegúrate de tener esta imagen o usa una existente
-    tag: 'AHORRO',
+    tag: 'IMBATIBLES',
     category: 'promociones', // <--- ESTO CREARÁ LA NUEVA PESTAÑA
   },
   {
@@ -181,7 +181,7 @@ export const menu: Product[] = [
       '1 Hamburguesa Callejera + 1 Perro Todo Un Clasico + 2 porciones de papas + 2 gaseosas',
     price: 24000,
     image: '/promos/comboBellako.jpeg',
-    tag: 'AHORRO',
+    tag: 'EL FLOW ES ESTE',
     category: 'promociones',
   },
 
@@ -194,5 +194,5 @@ export const menu: Product[] = [
     image: '/picadas/picada.jpeg', // Asegúrate de tener la foto
     category: 'picadas', // Categoría nueva
     extras: [],
-  }, 
+  },
 ];

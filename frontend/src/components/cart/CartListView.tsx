@@ -38,7 +38,6 @@ export const CartListView = ({
   return (
     <div className='space-y-4'>
       {cart.map((item) => {
-        // 1. GENERAMOS EL ID ÚNICO PARA ESTA FILA (Producto + Adicionales)
         const extrasId =
           item.selectedExtras
             ?.map((e: any) => e.id)
@@ -46,7 +45,6 @@ export const CartListView = ({
             .join('-') || '';
         const cartItemId = `${item.id}-${extrasId}`;
 
-        // 2. CALCULAMOS EL PRECIO DE LOS EXTRAS
         const extrasTotal =
           item.selectedExtras?.reduce(
             (acc: number, e: any) => acc + e.price,
@@ -56,7 +54,7 @@ export const CartListView = ({
 
         return (
           <div
-            key={cartItemId} // <--- SOLUCIÓN AL ERROR DE KEY
+            key={cartItemId}
             className='flex gap-4 bg-white/5 p-3 rounded-xl border border-white/5'
           >
             <div className='relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-black'>
@@ -76,23 +74,37 @@ export const CartListView = ({
                     {item.name}
                   </h4>
 
-                  {/* 3. LISTADO DE ADICIONALES SELECCIONADOS */}
+                  {/* --- AQUÍ ESTÁ EL CAMBIO: LISTADO DE ADICIONALES AGRUPADOS --- */}
                   {item.selectedExtras && item.selectedExtras.length > 0 && (
                     <div className='flex flex-wrap gap-1 mt-1'>
-                      {item.selectedExtras.map((extra: any) => (
-                        <span
-                          key={extra.id}
-                          className='text-[9px] text-urban-green bg-urban-green/10 px-1.5 py-0.5 rounded border border-urban-green/20'
-                        >
-                          + {extra.name}
-                        </span>
-                      ))}
+                      {(() => {
+                        const counts: {
+                          [key: string]: { name: string; qty: number };
+                        } = {};
+                        item.selectedExtras.forEach((extra: any) => {
+                          if (!counts[extra.id]) {
+                            counts[extra.id] = { name: extra.name, qty: 0 };
+                          }
+                          counts[extra.id].qty += 1;
+                        });
+
+                        return Object.entries(counts).map(([id, data]) => (
+                          <span
+                            key={id}
+                            className='text-[9px] text-urban-green bg-urban-green/10 px-1.5 py-0.5 rounded border border-urban-green/20'
+                          >
+                            {data.qty > 1 ? `${data.qty}x ` : '+ '}
+                            {data.name}
+                          </span>
+                        ));
+                      })()}
                     </div>
                   )}
+                  {/* --- FIN DEL CAMBIO --- */}
                 </div>
 
                 <button
-                  onClick={() => removeFromCart(cartItemId)} // <--- USA EL ID COMPUESTO
+                  onClick={() => removeFromCart(cartItemId)}
                   className='text-gray-500 hover:text-red-500 transition-colors flex-shrink-0 ml-2'
                 >
                   <X size={16} />
@@ -108,7 +120,7 @@ export const CartListView = ({
                   <button
                     onClick={() =>
                       updateQuantity(cartItemId, item.quantity - 1)
-                    } // <--- USA EL ID COMPUESTO
+                    }
                     className='w-6 h-6 flex items-center justify-center text-white hover:text-urban-green'
                   >
                     <Minus size={12} />
@@ -119,7 +131,7 @@ export const CartListView = ({
                   <button
                     onClick={() =>
                       updateQuantity(cartItemId, item.quantity + 1)
-                    } // <--- USA EL ID COMPUESTO
+                    }
                     className='w-6 h-6 flex items-center justify-center text-white hover:text-urban-green'
                   >
                     <Plus size={12} />

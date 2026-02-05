@@ -33,7 +33,7 @@ export const Footer = () => {
             <div className='text-[13px] space-y-1 font-sans'>
               <p className='text-white'>
                 Lun - Dom:{' '}
-                <span className='text-gray-400'>5:00 PM - 11:00 PM</span>
+                <span className='text-gray-400'>5:00 PM - 11:45 PM</span>
               </p>
               <p className='text-gray-500 uppercase text-[11px] tracking-tighter'>
                 Martes: Cerrado

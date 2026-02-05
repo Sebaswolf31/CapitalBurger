@@ -1,12 +1,11 @@
 'use client';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product, CartItem, ExtraOption } from '@/components/types';
+import { toast } from 'sonner';
 
 interface CartContextType {
   cart: CartItem[];
-  // Ahora addToCart recibe los adicionales seleccionados
   addToCart: (product: Product, selectedExtras?: ExtraOption[]) => void;
-  // Usaremos un identificador único para no borrar todas las hamburguesas del mismo tipo
   removeFromCart: (cartItemId: string) => void;
   updateQuantity: (cartItemId: string, quantity: number) => void;
   clearCart: () => void;
@@ -39,17 +38,34 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem('capital-burger-cart', JSON.stringify(cart));
   }, [cart]);
 
-  // Dentro de CartContext.tsx
+  // Cálculos derivados del estado
+  const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+  const totalPrice = cart.reduce((acc, item) => {
+    const extrasCost =
+      item.selectedExtras?.reduce((sum, extra) => sum + extra.price, 0) || 0;
+    return acc + (item.price + extrasCost) * item.quantity;
+  }, 0);
+
+  // --- FUNCIONES DE ACCIÓN ---
 
   const addToCart = (product: Product, selectedExtras: ExtraOption[] = []) => {
+    const MAX_TOTAL = 20;
+
+    // VALIDACIÓN 1: Límite global (Fuera del setCart para evitar fantasmas)
+    if (totalItems >= MAX_TOTAL) {
+      toast.error('¡Carrito lleno!', {
+        id: 'limit-cart',
+        description: `Por seguridad, no aceptamos pedidos de más de ${MAX_TOTAL} productos.`,
+      });
+      return;
+    }
+
     setCart((prevCart) => {
-      // Creamos una firma única para este pedido (ID + Extras seleccionados)
       const extrasId = selectedExtras
         .map((e) => e.id)
         .sort()
         .join('-');
 
-      // Buscamos si ya existe EXACTAMENTE el mismo producto con los mismos extras
       const existingItem = prevCart.find((item) => {
         const itemExtrasId =
           item.selectedExtras
@@ -60,7 +76,16 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       });
 
       if (existingItem) {
-        // Si ya existe igualito, solo aumentamos cantidad
+        // VALIDACIÓN 2: Límite por producto
+        if (existingItem.quantity >= 10) {
+          toast.error('¡Máximo 10 unidades!', {
+            id: 'limit-product',
+            description:
+              'No aceptamos más de 10 unidades de un mismo producto.',
+          });
+          return prevCart;
+        }
+
         return prevCart.map((item) => {
           const itemExtrasId =
             item.selectedExtras
@@ -73,9 +98,59 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         });
       }
 
-      // Si es nuevo o los extras son diferentes, se agrega como línea nueva
       return [...prevCart, { ...product, quantity: 1, selectedExtras }];
     });
+  };
+
+  const updateQuantity = (cartItemId: string, quantity: number) => {
+    if (quantity < 1) return;
+
+    // Buscamos el item actual para comparar (fuera del setCart)
+    const itemToUpdate = cart.find((item) => {
+      const itemExtrasId =
+        item.selectedExtras
+          ?.map((e: any) => e.id)
+          .sort()
+          .join('-') || '';
+      return `${item.id}-${itemExtrasId}` === cartItemId;
+    });
+
+    if (!itemToUpdate) return;
+
+    // Si el usuario intenta aumentar la cantidad, validamos límites
+    if (quantity > itemToUpdate.quantity) {
+      // Validar límite por producto
+      if (quantity > 10) {
+        toast.error('¡Límite alcanzado!', {
+          id: 'limit-product',
+          description: 'Máximo 10 unidades por producto.',
+        });
+        return;
+      }
+
+      // Validar límite global
+      if (totalItems >= 20) {
+        toast.error('¡Carrito lleno!', {
+          id: 'limit-cart',
+          description: 'Por seguridad, No aceptamos pedidos de más de 20 productos.',
+        });
+        return;
+      }
+    }
+
+    // Solo si pasó los filtros, actualizamos el estado
+    setCart((prev) =>
+      prev.map((item) => {
+        const itemExtrasId =
+          item.selectedExtras
+            ?.map((e: any) => e.id)
+            .sort()
+            .join('-') || '';
+        return `${item.id}-${itemExtrasId}` === cartItemId
+          ? { ...item, quantity }
+          : item;
+      }),
+    );
   };
 
   const removeFromCart = (cartItemId: string) => {
@@ -91,30 +166,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       }),
     );
   };
-
-  const updateQuantity = (cartItemId: string, quantity: number) => {
-    if (quantity < 1) return;
-    setCart((prev) =>
-      prev.map((item) => {
-        const itemExtrasId =
-          item.selectedExtras
-            ?.map((e) => e.id)
-            .sort()
-            .join('-') || '';
-        const currentId = `${item.id}-${itemExtrasId}`;
-        return currentId === cartItemId ? { ...item, quantity } : item;
-      }),
-    );
-  };
-
-  // Cálculo del precio TOTAL (Precio Base + Extras) x Cantidad
-  const totalPrice = cart.reduce((acc, item) => {
-    const extrasCost =
-      item.selectedExtras?.reduce((sum, extra) => sum + extra.price, 0) || 0;
-    return acc + (item.price + extrasCost) * item.quantity;
-  }, 0);
-
-  const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
     <CartContext.Provider

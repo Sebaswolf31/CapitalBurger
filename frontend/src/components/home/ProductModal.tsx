@@ -1,10 +1,10 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { X } from 'lucide-react';
+import { X, Plus, Minus } from 'lucide-react'; // Importamos Plus y Minus
 import { Product, ExtraOption } from '@/components/types';
 import { useCart } from '@/context/CartContext';
-import { FlyingImage } from '../ui/FlyingImage'; // Asegúrate de que la ruta sea correcta
+import { FlyingImage } from '../ui/FlyingImage';
 
 interface ProductModalProps {
   product: Product;
@@ -12,16 +12,16 @@ interface ProductModalProps {
 }
 
 export const ProductModal = ({ product, onClose }: ProductModalProps) => {
-  const { addToCart } = useCart();
-  const [selectedExtras, setSelectedExtras] = useState<ExtraOption[]>([]);
+  const { addToCart, totalItems } = useCart();
+  // CAMBIO: Ahora guardamos el objeto del extra + su cantidad
+  const [selectedExtras, setSelectedExtras] = useState<
+    { extra: ExtraOption; qty: number }[]
+  >([]);
 
-  // ESTADOS PARA LA ANIMACIÓN
   const [isFlying, setIsFlying] = useState(false);
   const [coords, setCoords] = useState({ x: 0, y: 0 });
-
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Bloquear scroll al abrir el modal
   useEffect(() => {
     audioRef.current = new Audio('/sounds/add-cart.mp3');
     document.body.style.overflow = 'hidden';
@@ -30,32 +30,62 @@ export const ProductModal = ({ product, onClose }: ProductModalProps) => {
     };
   }, []);
 
-  const toggleExtra = (extra: ExtraOption) => {
-    setSelectedExtras((prev) =>
-      prev.find((e) => e.id === extra.id)
-        ? prev.filter((e) => e.id !== extra.id)
-        : [...prev, extra],
-    );
+  // NUEVA FUNCIÓN: Maneja cantidades de 0 a 4
+  const updateExtraQty = (extra: ExtraOption, amount: number) => {
+    setSelectedExtras((prev) => {
+      const existing = prev.find((item) => item.extra.id === extra.id);
+
+      if (existing) {
+        const newQty = existing.qty + amount;
+        if (newQty <= 0)
+          return prev.filter((item) => item.extra.id !== extra.id);
+        if (newQty > 4) return prev; // LÍMITE DE 4 POR EXTRA
+        return prev.map((item) =>
+          item.extra.id === extra.id ? { ...item, qty: newQty } : item,
+        );
+      }
+
+      return amount > 0 ? [...prev, { extra, qty: 1 }] : prev;
+    });
   };
 
-  const extrasTotal = selectedExtras.reduce((acc, curr) => acc + curr.price, 0);
+  const extrasTotal = selectedExtras.reduce(
+    (acc, item) => acc + item.extra.price * item.qty,
+    0,
+  );
   const finalPrice = product.price + extrasTotal;
 
-  // NUEVA FUNCIÓN CON ANIMACIÓN
   const handleAdd = (e: React.MouseEvent) => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0; // Reinicia si el usuario hace clics rápidos
-      audioRef.current
-        .play()
-        .catch((err) => console.log('Error al reproducir audio:', err));
+    // Evitar múltiples clics
+    if (isFlying) return;
+
+    // 2. VALIDACIÓN: Usamos el totalItems que ya extrajimos arriba
+    if (totalItems >= 20) {
+      addToCart(product, []);
+      // El toast ya lo dispara el context, así que solo detenemos la función aquí
+      return;
     }
+
+    // Preparamos los extras
+    const flattenedExtras: ExtraOption[] = [];
+    selectedExtras.forEach((item) => {
+      for (let i = 0; i < item.qty; i++) {
+        flattenedExtras.push(item.extra);
+      }
+    });
+
+    // Agregamos al carrito
+    addToCart(product, flattenedExtras);
+
+    // Efectos visuales y de sonido
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(() => {});
+    }
+
     setCoords({ x: e.clientX, y: e.clientY });
     setIsFlying(true);
 
-    // Agregamos al carrito
-    addToCart(product, selectedExtras);
-
-    // Esperamos a que termine el vuelo para cerrar
     setTimeout(() => {
       setIsFlying(false);
       onClose();
@@ -64,7 +94,6 @@ export const ProductModal = ({ product, onClose }: ProductModalProps) => {
 
   return (
     <>
-      {/* Componente de la imagen voladora */}
       <FlyingImage
         isVisible={isFlying}
         startPos={coords}
@@ -73,13 +102,13 @@ export const ProductModal = ({ product, onClose }: ProductModalProps) => {
 
       <div className='fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm'>
         <div className='bg-urban-dark border border-white/10 w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-300'>
-          {/* IMAGEN Y BOTÓN CERRAR */}
-          <div className='relative w-28 h-60 w-full'>
+          {/* IMAGEN: Cambiamos object-cover por object-contain para que se vea completa */}
+          <div className='relative h-64 w-full bg-black/40'>
             <Image
               src={product.image}
               alt={product.name}
               fill
-              className='object-cover'
+              className='object-contain p-4' // 'contain' para que no se corte
             />
             <button
               onClick={onClose}
@@ -93,40 +122,55 @@ export const ProductModal = ({ product, onClose }: ProductModalProps) => {
             <h2 className='text-2xl font-heading italic text-white uppercase'>
               {product.name}
             </h2>
-            <p className='text-gray-400 text-[11px] text-sm mt-1'>
-              {product.description}
-            </p>
+            <p className='text-gray-400 text-xs mt-1'>{product.description}</p>
 
-            {/* SECCIÓN DE ADICIONALES */}
             {product.category !== 'promociones' &&
             product.extras &&
             product.extras.length > 0 ? (
               <div className='mt-6'>
                 <h3 className='text-urban-green font-heading text-xs uppercase tracking-widest mb-4'>
-                  Personaliza tu pedido
+                  Personaliza (Máx 4 c/u)
                 </h3>
                 <div className='space-y-3 max-h-48 overflow-y-auto pr-2 custom-scrollbar'>
-                  {product.extras.map((extra) => (
-                    <label
-                      key={extra.id}
-                      className='flex items-center justify-between p-3 rounded-xl border border-white/5 bg-white/5 cursor-pointer hover:border-urban-green/50 transition-all'
-                    >
-                      <div className='flex items-center gap-3'>
-                        <input
-                          type='checkbox'
-                          checked={selectedExtras.some(
-                            (e) => e.id === extra.id,
-                          )}
-                          onChange={() => toggleExtra(extra)}
-                          className='w-4 h-4 accent-urban-green'
-                        />
-                        <span className='text-white text-sm'>{extra.name}</span>
+                  {product.extras.map((extra) => {
+                    const currentQty =
+                      selectedExtras.find((item) => item.extra.id === extra.id)
+                        ?.qty || 0;
+                    return (
+                      <div
+                        key={extra.id}
+                        className='flex items-center justify-between p-3 rounded-xl border border-white/5 bg-white/5'
+                      >
+                        <div className='flex flex-col'>
+                          <span className='text-white text-sm font-bold'>
+                            {extra.name}
+                          </span>
+                          <span className='text-urban-green text-[10px]'>
+                            + ${extra.price.toLocaleString()}
+                          </span>
+                        </div>
+
+                        {/* CONTADOR -0+ */}
+                        <div className='flex items-center gap-3 bg-black/40 rounded-lg p-1 border border-white/10'>
+                          <button
+                            onClick={() => updateExtraQty(extra, -1)}
+                            className='p-1 text-gray-400 hover:text-white'
+                          >
+                            <Minus size={16} />
+                          </button>
+                          <span className='text-white font-bold min-w-[12px] text-center'>
+                            {currentQty}
+                          </span>
+                          <button
+                            onClick={() => updateExtraQty(extra, 1)}
+                            className='p-1 text-urban-green hover:text-white'
+                          >
+                            <Plus size={16} />
+                          </button>
+                        </div>
                       </div>
-                      <span className='text-urban-green font-bold text-sm'>
-                        + ${extra.price.toLocaleString()}
-                      </span>
-                    </label>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             ) : (
@@ -135,10 +179,9 @@ export const ProductModal = ({ product, onClose }: ProductModalProps) => {
               </div>
             )}
 
-            {/* BOTÓN FINAL - Ahora llama a handleAdd con el evento */}
             <button
               onClick={handleAdd}
-              className='w-full mt-8 bg-urban-green text-black font-heading py-4 rounded-xl flex justify-between px-6 items-center hover:scale-[1.02] active:scale-95 transition-all shadow-[0_0_20px_rgba(37,211,102,0.3)]'
+              className='w-full mt-8 bg-urban-green text-black font-heading py-4 rounded-xl flex justify-between px-6 items-center hover:scale-[1.02] active:scale-95 transition-all'
             >
               <span className='uppercase font-black italic'>
                 Agregar al carrito

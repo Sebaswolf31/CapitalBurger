@@ -56,17 +56,26 @@ export const useCartDrawer = () => {
           ) || 0;
         const totalUnitario = item.price + extrasCost;
 
-        message += `▪️ ${item.quantity}x ${item.name}\n`;
+        // Nombre del producto en negrita y cantidad
+        message += `*▪️ ${item.quantity}x ${item.name.toUpperCase()}*\n`;
 
-        // Si tiene adicionales, los listamos debajo del nombre
+        // Si tiene adicionales, los listamos uno debajo del otro con un guion
         if (item.selectedExtras && item.selectedExtras.length > 0) {
-          const extrasList = item.selectedExtras
-            .map((e: any) => e.name)
-            .join(', ');
-          message += `   _Adicionales: ${extrasList}_\n`;
+          const counts: { [key: string]: number } = {};
+          item.selectedExtras.forEach((e: any) => {
+            counts[e.name] = (counts[e.name] || 0) + 1;
+          });
+
+          // Encabezado pequeño para los extras
+          message += `   _Adicionales por unidad:_\n`;
+
+          Object.entries(counts).forEach(([name, qty]) => {
+            const qtyText = qty > 1 ? `${qty}x ` : '';
+            message += `   - ${qtyText}${name}\n`; // Lista hacia abajo
+          });
         }
 
-        message += `   Subtotal: $${(
+        message += `   *Subtotal:* $${(
           totalUnitario * item.quantity
         ).toLocaleString('es-CO')}\n\n`;
       });
