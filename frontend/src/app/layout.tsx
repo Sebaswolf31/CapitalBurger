@@ -10,6 +10,7 @@ import { PageLoader } from '@/components/ui/PageLoader';
 import { PromoModal } from '@/components/ui/PromoModal';
 import { CravingPrompt } from '@/components/ui/CravingPrompt';
 import { DailyPromoPopup } from '@/components/ui/DailyPromoPopup';
+
 // Fuente para Títulos (Estilo Urbano)
 const oswald = Oswald({
   subsets: ['latin'],
@@ -33,8 +34,21 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: 'Capital Burger | Street Style',
-  description: 'Las mejores hamburguesas callejeras.',
+  title: 'Capital Burger | Las Mejores Hamburguesas en Chinchina',
+  description:
+    'Hamburguesas artesanales a domicilio en Chinchina. Pide online tu burger favorita, papas y bebidas. ¡Envío rápido y seguro!',
+  keywords: [
+    'hamburguesas',
+    'domicilios',
+    'comida rápida',
+    'burger',
+    'Chinchina',
+  ],
+  openGraph: {
+    title: 'Capital Burger - No seguimos tendencias las cocinamos',
+    description: '¿Hambre? Pide las mejores hamburguesas de la Chinchina aquí.',
+    images: ['/images/logo.png'], // Una imagen bonita para cuando compartan el link en WhatsApp
+  },
 };
 
 export default function RootLayout({
