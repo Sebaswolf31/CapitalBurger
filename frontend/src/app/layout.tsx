@@ -36,7 +36,7 @@ const roboto = Roboto({
 export const metadata: Metadata = {
   title: 'Capital Burger | Las Mejores Hamburguesas en Chinchiná',
   description:
-    'Hamburguesas artesanales a domicilio en Chinchina. Pide online tu burger favorita, papas y bebidas. ¡Envío rápido y seguro!',
+    'Hamburguesas artesanales, perros y salchipapas a domicilio en Chinchiná. Pide online tu burger favorita, papas y bebidas. ¡Envío rápido y seguro!',
   keywords: [
     'hamburguesas',
     'domicilios',

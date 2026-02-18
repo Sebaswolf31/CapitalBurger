@@ -169,6 +169,9 @@ export const CheckoutFormView = ({
                   {NEQUI_NUMBER}
                 </p>
                 <p className='text-[10px] text-gray-400 italic mt-1'>
+                  Nequi a nombre de Javier Rua.{' '}
+                </p>
+                <p className='text-[10px] text-gray-400 italic mt-1'>
                   Envía el comprobante al finalizar.
                 </p>
               </div>
