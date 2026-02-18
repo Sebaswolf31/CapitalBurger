@@ -10,10 +10,12 @@ export const useCartDrawer = () => {
   const [formData, setFormData] = useState({
     address: '',
     paymentMethod: 'Efectivo',
+    changeFor: '',
     notes: '',
   });
 
   const PHONE_NUMBER = '573225917373';
+  const NEQUI_NUMBER = '3148797450';
 
   const handleCheckout = () => {
     setStep('checkout');
@@ -33,7 +35,7 @@ export const useCartDrawer = () => {
 
     toast.success('¡Pedido procesado!', {
       description: 'Te estamos redirigiendo a WhatsApp para finalizar.',
-      duration: 4000,
+      duration: 2400,
       style: {
         background: '#0a0a0a',
         color: '#fff',
@@ -86,6 +88,24 @@ export const useCartDrawer = () => {
       )}*\n\n`;
       message += `*📍 DIRECCIÓN:* ${formData.address}\n`;
       message += `*💵 MÉTODO DE PAGO:* ${formData.paymentMethod}\n`;
+
+      if (formData.paymentMethod === 'Efectivo') {
+        if (formData.changeFor) {
+          const valorLimpio = formData.changeFor.replace(/\./g, '');
+          const pagaCon = parseInt(valorLimpio) || 0;
+          const devuelta = pagaCon - totalPrice;
+          message += `*💸 PAGA CON:* $${pagaCon.toLocaleString('es-CO')}\n`;
+          message += `*🔄 DEVUELTA:* $${
+            devuelta > 0 ? devuelta.toLocaleString('es-CO') : '0'
+          }\n`;
+        } else {
+          message += `*💸 PAGA CON:* Exacto (No requiere devuelta)\n`;
+        }
+      }
+
+      if (formData.paymentMethod === 'Transferencia') {
+        message += `*📲 DATOS DE TRANSFERENCIA:* Nequi ${NEQUI_NUMBER}\n`;
+      }
 
       if (formData.notes) {
         message += `*📝 NOTAS:* ${formData.notes}\n`;

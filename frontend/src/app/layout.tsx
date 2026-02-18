@@ -34,7 +34,7 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: 'Capital Burger | Las Mejores Hamburguesas en Chinchina',
+  title: 'Capital Burger | Las Mejores Hamburguesas en Chinchiná',
   description:
     'Hamburguesas artesanales a domicilio en Chinchina. Pide online tu burger favorita, papas y bebidas. ¡Envío rápido y seguro!',
   keywords: [
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'Capital Burger - No seguimos tendencias las cocinamos',
-    description: '¿Hambre? Pide las mejores hamburguesas de la Chinchina aquí.',
+    description: '¿Hambre? Pide las mejores hamburguesas de Chinchiná aquí.',
     images: ['/images/logo.png'], // Una imagen bonita para cuando compartan el link en WhatsApp
   },
 };
