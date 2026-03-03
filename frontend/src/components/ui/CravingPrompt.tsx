@@ -12,7 +12,7 @@ export const CravingPrompt = () => {
 
   const { addToCart, setIsCartOpen, cart } = useCart();
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  
+
   // REFERENCIA PARA EL AUDIO
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -24,7 +24,7 @@ export const CravingPrompt = () => {
   useEffect(() => {
     audioRef.current = new Audio('/sounds/notification.mp3');
     audioRef.current.volume = 0.3; // Volumen sugerido (30%)
-    
+
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
@@ -37,12 +37,14 @@ export const CravingPrompt = () => {
 
     setIsVisible(true);
     setAttempts((prev) => prev + 1);
-    
+
     // Reproducir sonido al aparecer
     if (audioRef.current) {
       audioRef.current.currentTime = 0; // Reinicia el audio por si acaso
       audioRef.current.play().catch((e) => {
-        console.log("El navegador bloqueó el audio automático hasta que el usuario interactúe.");
+        console.log(
+          'El navegador bloqueó el audio automático hasta que el usuario interactúe.',
+        );
       });
     }
   };
@@ -116,7 +118,7 @@ export const CravingPrompt = () => {
         <div className='flex flex-col max-w-[140px]'>
           <span className='text-white font-urban text-[10px] uppercase italic tracking-wider leading-none flex items-center gap-1'>
             <Flame size={10} className='text-urban-green' fill='currentColor' />
-            {attempts > 1 ? '¿Aún con antojo?' : 'Recomendada'}
+            {attempts > 1 ? '¿Aún sin antojo?' : 'Recomendamos'}
           </span>
           <span className='text-white font-heading text-xs uppercase mt-1 truncate'>
             {promoProduct.name}

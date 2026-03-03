@@ -25,6 +25,13 @@ export const CartFooter = ({
           ${totalPrice.toLocaleString('es-CO')}
         </span>
       </div>
+      <div className='flex justify-between text-sm'>
+        <span className='text-gray-400'>Domicilio</span>
+        <div className='flex gap-2'>
+          <span className='line-through text-red-500'>$2.000</span>
+          <span className='text-urban-green font-bold'>¡GRATIS! (Web)</span>
+        </div>
+      </div>
 
       {step === 'cart' ? (
         <button

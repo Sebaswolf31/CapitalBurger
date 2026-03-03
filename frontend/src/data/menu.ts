@@ -60,11 +60,11 @@ export const menu: Product[] = [
   },
   {
     id: '5',
-    name: 'Extasis',
+    name: 'Golden Street',
     description:
-      'Mayo de la casa, lechuga, pulled pork en salsa de jaggermatter, queso philadelphia, mermelada de frutos rojos',
+      'Deliciosa carne artesanal con queso doble crema, pollo desmechado en salsa de champiñones cremosa, piña asada y calada, salsa de maíz de capital burger',
     price: 18000,
-    image: '/burgers/extasis.jpeg',
+    image: '/burgers/golden.jpeg',
     tag: 'PRODUCTO MES',
     category: 'hamburguesas',
     isPromo: true, // Esto es para destacarla visualmente
@@ -190,7 +190,7 @@ export const menu: Product[] = [
     name: 'Picada Personal',
     description:
       'Chicharoon, costilla, bondiola, chorizo, papa, arepa  y guacamole.',
-    price: 16000,
+    price: 17000,
     image: '/picadas/picada.jpeg', // Asegúrate de tener la foto
     category: 'picadas', // Categoría nueva
     extras: [],

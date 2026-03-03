@@ -10,6 +10,7 @@ import { PageLoader } from '@/components/ui/PageLoader';
 import { PromoModal } from '@/components/ui/PromoModal';
 import { CravingPrompt } from '@/components/ui/CravingPrompt';
 import { DailyPromoPopup } from '@/components/ui/DailyPromoPopup';
+import { PromoBanner } from '@/components/ui/PromoBanner';
 
 // Fuente para Títulos (Estilo Urbano)
 const oswald = Oswald({
@@ -63,6 +64,7 @@ export default function RootLayout({
       >
         <CartProvider>
           <PageLoader />
+          <PromoBanner />
           <PromoModal />
           <CravingPrompt />
           <Navbar />
