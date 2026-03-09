@@ -144,7 +144,7 @@ export const menu: Product[] = [
     id: '23',
     name: 'Underground',
     description:
-      'Papas a la francesa, bondiola, costillas al barril con BBQ de tamarindo, queso mozarella, huevos de codorniz',
+      'Papas a la francesa, costillas al barril con BBQ de tamarindo, queso mozarella, huevos de codorniz',
     price: 18000,
     image: '/fries/under.jpeg',
     tag: 'LA VUELTA',
