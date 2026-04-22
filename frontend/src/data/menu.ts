@@ -63,7 +63,7 @@ export const menu: Product[] = [
     name: 'LADY ROSE',
     description:
       'Deliciosa carne artesanal, queso doble crema, Guacamole, chorizo santa rosano, BBQ de uchuva, choclitos de limon',
-    price: 18000,
+    price: 20000,
     image: '/burgers/lady.jpeg',
     tag: 'PRODUCTO MES',
     category: 'hamburguesas',
