@@ -60,11 +60,11 @@ export const menu: Product[] = [
   },
   {
     id: '5',
-    name: 'Golden Street',
+    name: 'LADY ROSE',
     description:
-      'Deliciosa carne artesanal con queso doble crema, pollo desmechado en salsa de champiñones cremosa, piña asada y calada, salsa de maíz de capital burger',
+      'Deliciosa carne artesanal, queso doble crema, Guacamole, chorizo santa rosano, BBQ de uchuva, choclitos de limon',
     price: 18000,
-    image: '/burgers/golden.jpeg',
+    image: '/burgers/lady.jpeg',
     tag: 'PRODUCTO MES',
     category: 'hamburguesas',
     isPromo: true, // Esto es para destacarla visualmente
@@ -190,8 +190,18 @@ export const menu: Product[] = [
     name: 'Picada Personal',
     description:
       'Chicharoon, costilla, bondiola, chorizo, papa, arepa  y guacamole.',
-    price: 17000,
+    price: 18000,
     image: '/picadas/picada.jpeg', // Asegúrate de tener la foto
+    category: 'picadas', // Categoría nueva
+    extras: [],
+  },
+  {
+    id: 'picada2',
+    name: 'Cubano al barril',
+    description:
+      'Lechuga, tomate, salsa de ajo rostizado, pepinillos, bondiola al barril, queso mozzarella, chicharrón al barril, guacamole, pico de gallo, pimientos',
+    price: 20000,
+    image: '/picadas/cubano.jpeg', // Asegúrate de tener la foto
     category: 'picadas', // Categoría nueva
     extras: [],
   },

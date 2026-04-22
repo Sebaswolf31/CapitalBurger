@@ -64,7 +64,6 @@ export default function RootLayout({
       >
         <CartProvider>
           <PageLoader />
-          <PromoBanner />
           <PromoModal />
           <CravingPrompt />
           <Navbar />
