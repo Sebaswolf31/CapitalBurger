@@ -196,7 +196,7 @@ export const menu: Product[] = [
     extras: [],
   },
   {
-    id: 'picada2',
+    id: 'cubano1',
     name: 'Cubano al barril',
     description:
       'Lechuga, tomate, salsa de ajo rostizado, pepinillos, bondiola al barril, queso mozzarella, chicharrón al barril, guacamole, pico de gallo, pimientos',
