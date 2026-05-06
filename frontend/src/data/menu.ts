@@ -60,11 +60,11 @@ export const menu: Product[] = [
   },
   {
     id: '5',
-    name: 'LADY ROSE',
+    name: 'MISTERY',
     description:
-      'Deliciosa carne artesanal, queso doble crema, Guacamole, chorizo santa rosano, BBQ de uchuva, choclitos de limon',
+      'Ingredientes con toque español: Carne Mystery burger jugosa rellena de peperoni y queso español, Pan ajonjolí especial, Salsa de crema ibérica, Zanahoria crispy, Reducción de peras estilo mediterráneo y semillas de amapola, Lechuga fresca',
     price: 20000,
-    image: '/burgers/lady.jpeg',
+    image: '/burgers/mistery.jpeg',
     tag: 'PRODUCTO MES',
     category: 'hamburguesas',
     isPromo: true, // Esto es para destacarla visualmente
@@ -202,7 +202,7 @@ export const menu: Product[] = [
       'Lechuga, tomate, salsa de ajo rostizado, pepinillos, bondiola al barril, queso mozzarella, chicharrón al barril, guacamole, pico de gallo, pimientos',
     price: 20000,
     image: '/picadas/cubano.jpeg', // Asegúrate de tener la foto
-    category: 'picadas', // Categoría nueva
+    category: 'cubanos', // Categoría nueva
     extras: [],
   },
 ];

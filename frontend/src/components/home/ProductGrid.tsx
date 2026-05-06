@@ -35,6 +35,9 @@ export const ProductGrid = () => {
     if (today === 6 || today === 0) {
       cats.push({ id: 'picadas', label: 'Picadas' });
     }
+    if (today === 2 || today === 6 || today === 0) {
+      cats.push({ id: 'Cubano', label: 'Sandwinch Cubano' });
+    }
 
     setAvailableCategories(cats);
   }, []);
