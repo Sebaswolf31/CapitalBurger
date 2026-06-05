@@ -35,7 +35,7 @@ export const ProductGrid = () => {
     if (today === 6 || today === 0) {
       cats.push({ id: 'picadas', label: 'Picadas' });
     }
-    if (today === 6 || today === 6 || today === 0) {
+    if (today === 5 || today === 6 || today === 0) {
       cats.push({ id: 'cubanos', label: 'Sandwinch Cubano' });
     }
 
