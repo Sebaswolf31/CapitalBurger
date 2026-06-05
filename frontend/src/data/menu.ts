@@ -60,11 +60,11 @@ export const menu: Product[] = [
   },
   {
     id: '5',
-    name: 'MISTERY',
+    name: 'LA PECADORA',
     description:
-      'Ingredientes con toque español: Carne Mystery burger jugosa rellena de peperoni y queso español, Pan ajonjolí especial, Salsa de crema ibérica, Zanahoria crispy, Reducción de peras estilo mediterráneo y semillas de amapola, Lechuga fresca',
+      'salsa ahumada de pimenton y piña ,Snack de remolacha,Mermelada de mango biché picante,Queso colby jack, Bondiola al barril, Mayonesa al curry y crema de coco   ',
     price: 20000,
-    image: '/burgers/mistery.jpeg',
+    image: '/burgers/pecadora.jpeg',
     tag: 'PRODUCTO MES',
     category: 'hamburguesas',
     isPromo: true, // Esto es para destacarla visualmente
